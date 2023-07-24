@@ -79,6 +79,9 @@ const ResultPage = () => {
         }
 
         let cleanedResponse = responseText.replace(/\n/g, " ");
+
+        console.log(cleanedResponse);
+        
         let jsonResponse = JSON.parse(cleanedResponse);
 
         setPosts(jsonResponse["posts"]);

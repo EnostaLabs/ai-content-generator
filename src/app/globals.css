@@ -88,12 +88,12 @@ option {
   transform-origin: 0%;
 }
 
-.post-title{
-  color: hsla(125, 98%, 72%, 1);
+.post-title {
+  color: hsl(51.51deg 93.26% 60.28%);
   margin-bottom: 1rem;
 }
 
-.post-content{
-  border: 2px solid hsla(125, 98%, 72%, 1);
+.post-content {
+  border: 2px solid hsl(51.51deg 93.26% 60.28%);
   padding: 1rem;
 }
