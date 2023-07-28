@@ -59,8 +59,7 @@ export async function POST(request) {
         - Base on the minigame ideas: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
         - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
         - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement minigame post.
-        - All posts must has its own headline.
-        - Do not include any icon or special character.`
+        `
     }
 
     if (contentAngle === "local experiencing") {
@@ -76,10 +75,7 @@ export async function POST(request) {
         """
         - Base on the local experiencing idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
         - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
-        - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
         - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement local experiencing post.
-        - All posts must has its own headline.
-        - Do not include any icon or special character.
         `
 
     }
@@ -95,10 +91,9 @@ export async function POST(request) {
             ${formulas}
             Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
             """
-            - I want you to write ${numberOfDrafts} Facebook marketing post(s) that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle, based on these idea: """"${mainMessage}""". The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
-            - You must consider and pick some the best formulas from the aforementioned formulas that fit the required content pillar, content angle, tone of voice, and main idea.
-            - All posts must has its own headline.
-            - Do not include any icon or special character.`
+            - I want you to write ${numberOfDrafts} Facebook marketing post(s) that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle, based on these idea: """"${mainMessage}""". 
+            - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
+            - You must consider and pick some the best formulas from the aforementioned formulas that fit the required content pillar, content angle, tone of voice, and main idea.`
     }
 
     let keyWordsPrompt = ""
@@ -108,6 +103,8 @@ export async function POST(request) {
 
     firstPrompt = `${firstPrompt} ${keyWordsPrompt}
     - Use English only.
+    - All posts must has its own headline.
+    - Do not include any icon or special character.
     - You must write each post with different formulas. Each post must be completely different from each others in both structure and vocabulary, with the similarity below 2%.
     - Write they formally, avoid using cheap trends."""`
 

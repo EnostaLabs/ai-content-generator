@@ -78,7 +78,10 @@ const ResultPage = () => {
           setResponseStream((prev) => prev + chunkValue);
         }
         console.log(responseText);
-        let cleanedResponse = responseText.replace(/\\n/g, "");
+
+        let cleanedResponse = responseText.replace(/\n/g, "");
+        cleanedResponse = cleanedResponse.replace(/\\n/g, "");
+        cleanedResponse = cleanedResponse.replace(/\\"/g, "");
 
         console.log(cleanedResponse);
         
