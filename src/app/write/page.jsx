@@ -77,14 +77,14 @@ const ResultPage = () => {
 
           setResponseStream((prev) => prev + chunkValue);
         }
-
-        let cleanedResponse = responseText.replace(/\n/g, " ");
+        console.log(responseText);
+        let cleanedResponse = responseText.replace(/\\n/g, "");
 
         console.log(cleanedResponse);
         
         let jsonResponse = JSON.parse(cleanedResponse);
 
-        setPosts(jsonResponse["posts"]);
+        setPosts(jsonResponse);
       } catch (err) {
         console.log("Content Page:", err);
       } finally {
@@ -112,7 +112,11 @@ const ResultPage = () => {
             {posts?.map((content, index) => (
               <div className="mb-12" key={index}>
                 <div className="post-title">Post {index + 1}</div>
-                <div className="post-content">{content}</div>
+                <div className="post-content">
+                  <div className="text-amber-400"><b>{content.heading}</b></div>
+                  <br></br>
+                  <div>{content.content}</div>
+                </div>
               </div>
             ))}
           </div>

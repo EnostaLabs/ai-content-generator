@@ -1,9 +1,10 @@
 export const angles = {
     community: [
-        "event and activities",
+        "events and activities",
         "media sponsor or support"
     ],
     education: [
+        
         "definitions or characteristic of service",
         "tendencyies and trends",
         "insightful coworking knowledge"

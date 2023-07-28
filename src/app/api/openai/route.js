@@ -1,5 +1,6 @@
 import { OpenAIStream } from "@/app/utils/OpenAIStream";
 import { intro } from "@/app/constants/introduction";
+import { formulas } from "@/app/constants/formulas";
 
 
 
@@ -9,68 +10,127 @@ if (!process.env.OPENAI_API_KEY) {
 
 export const runtime = 'edge'
 
+async function getIdea(prompt) {
+    const payLoad = {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 1,
+        frequency_penalty: 2,
+        presence_penalty: 1,
+        max_tokens: 1500,
+        stream: true,
+        n: 1,
+    }
+
+    const stream = await OpenAIStream(payLoad)
+    const response = new Response(stream)
+
+    const data = response.body
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let responseText = "";
+    while (!done) {
+        const { value, done: doneReading } = await reader.read();
+
+        done = doneReading;
+        const chunkValue = decoder.decode(value);
+
+        responseText += chunkValue;
+    }
+    return responseText;
+}
+
 export async function POST(request) {
     let { numberOfDrafts, numberOfWords, contentPillar, contentAngle, toneOfVoice, mainMessage, keywords } = await request.json()
-
-    if (mainMessage === "") {
-        let prompt = `${intro}
-        Give a topic for Facebook marketing posts for Enouvo Space that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle. The posts should have the ${toneOfVoice} tone and be around ${numberOfWords} words in length. Start immediately with the topic name and only the topic name: .`
-
-        const payLoad = {
-            model: 'gpt-3.5-turbo',
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 1,
-            frequency_penalty: 2,
-            presence_penalty: 1,
-            max_tokens: 20, // ~ 1125 words
-            stream: true,
-            n: 1,
+    let prompt = ""
+    let firstPrompt = ""
+    if (contentAngle === "minigame or contest") {
+        if (mainMessage === "") {
+            prompt = `${intro}
+            I want you to act as a copywriter with 10 years of experience.
+            Give me ${numberOfDrafts} excited minigame or contest ideas to make target audience interact with Enouvo Space Facebook fanpage. Return only the main idea(s) directly, do not include any explain.`
+            mainMessage = await getIdea(prompt);
         }
-
-        const stream = await OpenAIStream(payLoad)
-        const response = new Response(stream)
-
-        const data = response.body
-        const reader = data.getReader();
-        const decoder = new TextDecoder();
-        let done = false;
-        let responseText = "";
-        while (!done) {
-            const { value, done: doneReading } = await reader.read();
-
-            done = doneReading;
-            const chunkValue = decoder.decode(value);
-
-            responseText += chunkValue;
-        }
-
-        mainMessage = responseText;
+        firstPrompt = `${intro}
+        ${formulas}
+        Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+        """
+        - Base on the minigame ideas: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
+        - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
+        - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement minigame post.
+        - All posts must has its own headline.
+        - Do not include any icon or special character.`
     }
-    let firstPrompt = `${intro}
-    Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
-    """- Generate exactly ${numberOfDrafts} engaging Facebook marketing post(s) that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle. The posts should have the ${toneOfVoice} tone and be around ${numberOfWords} words in length. The main message to convey is: "${mainMessage}".`
+
+    if (contentAngle === "local experiencing") {
+        if (mainMessage === "") {
+            prompt = `I want you to act as a copywriter with 10 years of experience.
+            Give me ${numberOfDrafts} idea(s) about habits of Danang people or Vietnamese people, Danang or Vietnam attractions or cuisines, Vietnam festivals at this time.
+            Return only the main idea(s) directly, do not include any explain.`
+            mainMessage = await getIdea(prompt);
+        }
+        firstPrompt = `${intro}
+        ${formulas}
+        Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+        """
+        - Base on the local experiencing idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
+        - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
+        - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
+        - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement local experiencing post.
+        - All posts must has its own headline.
+        - Do not include any icon or special character.
+        `
+
+    }
+    else {
+        if (mainMessage === "") {
+            prompt = `${intro}
+            I want you to act as a copywriter with 10 years of experience.
+            Give me ${numberOfDrafts} idea(s) for Facebook marketing posts for Enouvo Space that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle.
+            Return only the main idea(s) directly, do not include any explain.`
+            mainMessage = await getIdea(prompt);
+        }
+        firstPrompt = `${intro}
+            ${formulas}
+            Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+            """
+            - I want you to write ${numberOfDrafts} Facebook marketing post(s) that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle, based on these idea: """"${mainMessage}""". The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
+            - You must consider and pick some the best formulas from the aforementioned formulas that fit the required content pillar, content angle, tone of voice, and main idea.
+            - All posts must has its own headline.
+            - Do not include any icon or special character.`
+    }
 
     let keyWordsPrompt = ""
     if (keywords != "") {
-        keyWordsPrompt = `The following keywords should appear from 1 to 2 times in the posts: """${keywords}"""`
+        keyWordsPrompt = `- The following keywords should appear from 1 to 2 times in the posts: """${keywords}"""`
     }
 
     firstPrompt = `${firstPrompt} ${keyWordsPrompt}
-    - Each post must be completely different from each others in both structure and vocabulary, with the similarity below 2%.
+    - Use English only.
+    - You must write each post with different formulas. Each post must be completely different from each others in both structure and vocabulary, with the similarity below 2%.
     - Write they formally, avoid using cheap trends."""`
 
+    const requestedOutputStructure = [
+        {
+            heading: 'The headline',
+            content: 'The post content',
+        }
+    ]
+
     let finalPrompt = `${firstPrompt}
-    Return your answer entirely in the form of a JSON object. The JSON has only one object named "posts" which is an array of the generated posts. Each element of that array will be a string with value as the corresponding post content. Make sure the returned JSON is valid to parse.`
+    Do not include any explanations, only provide a RFC8259 compliant JSON response following this format without deviation.
+    ${JSON.stringify(requestedOutputStructure, null, 2)}`
 
     console.log(finalPrompt)
 
     const payLoad = {
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-3.5-turbo-16k',
         messages: [{ role: 'user', content: finalPrompt }],
         temperature: 1,
         frequency_penalty: 2,
         presence_penalty: 1,
-        max_tokens: 1500, // ~ 1125 words
+        max_tokens: 10000,
         stream: true,
         n: 1,
     }

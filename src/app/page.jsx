@@ -10,7 +10,7 @@ const HomePage = () => {
   const [numberOfDrafts, setNumberOfDrafts] = useState(1);
   const [numberOfWords, setNumberOfWords] = useState(100);
   const [contentPillar, setContentPillar] = useState("community");
-  const [contentAngle, setContentAngle] = useState("event and activities");
+  const [contentAngle, setContentAngle] = useState("events and activities");
   const [toneOfVoice, setToneOfVoice] = useState("friendly");
   const [mainMessage, setMainMessage] = useState("");
   const [keywords, setKeyWords] = useState("");
@@ -25,10 +25,12 @@ const HomePage = () => {
 
   const handlePillarSelect = (e) => {
     setContentPillar(e.target.value);
+    setContentAngle(angles[e.target.value][0]);
   };
 
   const handleAngleSelect = (e) => {
     setContentAngle(e.target.value);
+    console.log(e.target.value);
   };
 
   const handleToneOfVoiceSelect = (e) => {
@@ -94,6 +96,7 @@ const HomePage = () => {
                 Content Angle
               </label>
               <select
+                id="contentAngle"
                 value={contentAngle}
                 onChange={handleAngleSelect}
                 name="contentAngle"
