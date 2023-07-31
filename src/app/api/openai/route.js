@@ -56,7 +56,7 @@ export async function POST(request) {
         ${formulas}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
-        - Base on the minigame ideas: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
+        - Based on the minigame ideas: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
         - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
         - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement minigame post.
         `
@@ -73,11 +73,27 @@ export async function POST(request) {
         ${formulas}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
-        - Base on the local experiencing idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
+        - Based on the local experiencing idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
         - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
         - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement local experiencing post.
         `
 
+    }
+    if (contentAngle === "insightful coworking knowledge"){
+        if (mainMessage === ""){
+            prompt = `I want you to act as a copywriter with 10 years of experience.
+            Give me ${numberOfDrafts} idea(s) about co-working knowledge like tips and tricks, ebooks, short facts, etc. 
+            Return only the main idea(s) directly, do not include any explain.`
+            mainMessage = await getIdea(prompt);
+        }
+        firstPrompt = `${intro}
+        ${formulas}
+        Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+        """
+        - Based on the folowing insightful knowledge idea(s): """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
+        - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
+        - You must consider and pick some of the best formulas from the aforementioned formulas that fit best for customer education post.
+        `
     }
     else {
         if (mainMessage === "") {
