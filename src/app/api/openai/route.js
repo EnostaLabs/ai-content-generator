@@ -57,6 +57,7 @@ export async function POST(request) {
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
         - Based on the minigame ideas: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
+        - Write in form of listing points.
         - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
         - You must consider and pick some the best formulas from the aforementioned formulas that fit best for engagement minigame post.
         `
@@ -69,7 +70,7 @@ export async function POST(request) {
             Return only the main idea(s) directly, do not include any explain.`
             mainMessage = await getIdea(prompt);
         }
-        firstPrompt = `${intro}
+        firstPrompt = `
         ${formulas}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
