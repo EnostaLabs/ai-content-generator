@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { angles } from "./constants/angles";
 import { toneofvoices } from "./constants/toneofvoices";
 
@@ -14,6 +14,61 @@ const HomePage = () => {
   const [toneOfVoice, setToneOfVoice] = useState("friendly");
   const [mainMessage, setMainMessage] = useState("");
   const [keywords, setKeyWords] = useState("");
+
+  useEffect(() => {
+    const noDraftsCache = window.localStorage.getItem("MY_NO_DRAFTS");
+    const noWordsCache = window.localStorage.getItem("MY_NO_WORDS");
+    const contentPillarCache = window.localStorage.getItem("MY_CONTENT_PILLAR");
+    const contentAngleCache = window.localStorage.getItem("MY_CONTENT_ANGLE");
+    const toneOfVoiceCache = window.localStorage.getItem("MY_TONE_OF_VOICE");
+    const mainMessageCache = window.localStorage.getItem("MY_MAIN_MESSAGE");
+    const keywordsCache = window.localStorage.getItem("MY_KEY_WORDS");
+
+    setNumberOfDrafts(JSON.parse(noDraftsCache));
+    setNumberOfWords(JSON.parse(noWordsCache));
+    setContentPillar(JSON.parse(contentPillarCache));
+    setContentAngle(JSON.parse(contentAngleCache));
+    setToneOfVoice(JSON.parse(toneOfVoiceCache));
+    setMainMessage(JSON.parse(mainMessageCache));
+    setKeyWords(JSON.parse(keywordsCache));
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("MY_NO_DRAFTS", JSON.stringify(numberOfDrafts));
+  }, [numberOfDrafts]);
+
+  useEffect(() => {
+    window.localStorage.setItem("MY_NO_WORDS", JSON.stringify(numberOfWords));
+  }, [numberOfWords]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "MY_CONTENT_PILLAR",
+      JSON.stringify(contentPillar)
+    );
+  }, [contentPillar]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "MY_CONTENT_ANGLE",
+      JSON.stringify(contentAngle)
+    );
+  }, [contentAngle]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "MY_TONE_OF_VOICE",
+      JSON.stringify(toneOfVoice)
+    );
+  }, [toneOfVoice]);
+
+  useEffect(() => {
+    window.localStorage.setItem("MY_MAIN_MESSAGE", JSON.stringify(mainMessage));
+  }, [mainMessage]);
+
+  useEffect(() => {
+    window.localStorage.setItem("MY_KEY_WORDS", JSON.stringify(keywords));
+  }, [keywords]);
 
   const handleNoDraftsChange = (e) => {
     setNumberOfDrafts(e.target.value);
@@ -200,7 +255,7 @@ const HomePage = () => {
                   contentAngle: contentAngle.toLowerCase(),
                   toneOfVoice: toneOfVoice.toLowerCase(),
                   mainMessage: mainMessage,
-                  keywords: keywords
+                  keywords: keywords,
                 },
               }}
             >
