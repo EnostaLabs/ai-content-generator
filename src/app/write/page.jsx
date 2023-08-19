@@ -18,7 +18,7 @@ const ResultPage = () => {
   const keywords = params.get("keywords");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [posts, setPosts] = useState([]); // array of posts
+  const [postsList, setPosts] = useState([]); // array of posts
   const [progress, setProgress] = useState(0);
 
   const [responseStream, setResponseStream] = useState("");
@@ -77,17 +77,11 @@ const ResultPage = () => {
 
           setResponseStream((prev) => prev + chunkValue);
         }
-        console.log(responseText);
-
-        let cleanedResponse = responseText.replace(/\n/g, "");
-        cleanedResponse = cleanedResponse.replace(/\\n/g, "");
-        cleanedResponse = cleanedResponse.replace(/\\"/g, "");
-
-        console.log(cleanedResponse);
         
-        let jsonResponse = JSON.parse(cleanedResponse);
+        let jsonResponse = JSON.parse(responseText);
 
-        setPosts(jsonResponse);
+        setPosts(jsonResponse.posts);
+        console.log(postsList)
       } catch (err) {
         console.log("Content Page:", err);
       } finally {
@@ -112,11 +106,11 @@ const ResultPage = () => {
       ) : (
         <>
           <div className="pt-12">
-            {posts?.map((content, index) => (
+            {postsList?.map((content, index) => (
               <div className="mb-12" key={index}>
                 <div className="post-title">Post {index + 1}</div>
                 <div className="post-content">
-                  <div className="text-amber-400"><b>{content.heading}</b></div>
+                  <div className="text-amber-400"><b>{content.headline}</b></div>
                   <br></br>
                   <div>{content.content}</div>
                 </div>
