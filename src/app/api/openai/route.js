@@ -89,15 +89,31 @@ export async function POST(request) {
         ${formulas}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
-        - Based on the folowing insightful knowledge idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post(s).
-        - The post(s) should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
-        - You must consider and pick some of the best formulas from the aforementioned formulas that fit best for customer education post.
+        - Based on the folowing insightful knowledge idea: """${mainMessage}""", generate exactly ${numberOfDrafts} educational Facebook marketing post.
+        - The post should have the ${toneOfVoice} tone and each post must be approximately ${numberOfWords} words in length.
+        - You must consider and pick some formulas from the aforementioned formulas that fit best for customer education post.
+        `
+    }
+    if (contentAngle === "motivation") {
+        if (mainMessage === "") {
+            prompt = `
+            Give me exactly ${numberOfDrafts} idea for a motivational Facebook post.
+            Return only the main idea directly, do not include any explain.`
+            mainMessage = await getIdea(prompt);
+        }
+        firstPrompt = `
+        ${formulas}
+        Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+        """
+        - Based on the folowing motivational content idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post.
+        - The post should have the ${toneOfVoice} tone and each post must be approximately ${numberOfWords} words in length.
+        - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
         `
     }
     else {
         if (mainMessage === "") {
             prompt = `$
-            Give me ${numberOfDrafts} idea for Facebook marketing posts for Enouvo Space that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle.
+            Give me ${numberOfDrafts} idea for Facebook marketing posts that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle.
             Return only the main idea directly, do not include any explain.`
             mainMessage = await getIdea(prompt);
         }
@@ -105,11 +121,10 @@ export async function POST(request) {
             ${formulas}
             Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
             """
-            - I want you to write ${numberOfDrafts} Facebook marketing post that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle, based on these idea: """"${mainMessage}""". 
-            - The post should have the ${toneOfVoice} tone and each post must be ${numberOfWords} words in length.
-            - You must consider and pick some the best formulas from the aforementioned formulas that fit the required content pillar, content angle, tone of voice, and main idea.`
+            - Based on these main idea: """"${mainMessage}""", I want you to generate exactly ${numberOfDrafts} Facebook marketing post that revolves around the "${contentPillar}" pillar and approaches the "${contentAngle}" angle. 
+            - The post should have the ${toneOfVoice} tone and each post must be approximately ${numberOfWords} words in length.
+            - You must consider and pick some formulas from the aforementioned formulas that fit the required content pillar, content angle, tone of voice, and the main idea.`
     }
-
     let keyWordsPrompt = ""
     if (keywords != "") {
         keyWordsPrompt = `- The following keywords should appear from 1 to 2 times in the posts: """${keywords}"""`
@@ -118,7 +133,7 @@ export async function POST(request) {
     firstPrompt = `${firstPrompt} ${keyWordsPrompt}
     - Use English only.
     - All posts must has its own headline.
-    - You must write each post with different formulas. Each post must be completely different from each others in both structure and vocabulary, with the similarity below 2%."""`
+    - Each post must be completely different from each others in both structure and vocabulary, with the similarity below 2%."""`
 
     let finalPrompt = `${firstPrompt}`
     console.log(finalPrompt)
@@ -126,7 +141,7 @@ export async function POST(request) {
     const payLoad = {
         model: 'gpt-3.5-turbo-16k',
         messages: [{ role: 'system', content: 'You are a copywriter with 10 years of experience.' }, { role: "system", content: "Output only valid JSON, format: {'posts': [{'headline': 'the headline', 'content': 'the content'}]}" }, { role: 'user', content: firstPrompt }],
-        temperature: 0.7,
+        temperature: 0.8,
         max_tokens: 10000,
         stream: true,
         n: 1,
