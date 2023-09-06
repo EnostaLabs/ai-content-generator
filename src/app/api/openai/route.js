@@ -16,7 +16,7 @@ async function getIdea(prompt) {
         messages: [{ role: 'system', content: 'You are a copywriter with 10 years of experience.' },
         { role: 'user', content: prompt }],
         temperature: 0.9,
-        max_tokens: 1500,
+        max_tokens: 3000,
         stream: true,
         n: 1,
     }
@@ -105,7 +105,7 @@ export async function POST(request) {
         ${formulas}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
-        - Based on the folowing motivational content idea: """${mainMessage}""", generate exactly ${numberOfDrafts} engaging Facebook marketing post.
+        - Based on the folowing motivational content idea: """${mainMessage}""", generate exactly ${numberOfDrafts} motivational Facebook post.
         - The post should have the ${toneOfVoice} tone and each post must be approximately ${numberOfWords} words in length.
         - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
         `
