@@ -15,7 +15,7 @@ async function getIdea(prompt) {
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'system', content: 'You are a copywriter with 10 years of experience.' },
         { role: 'user', content: prompt }],
-        temperature: 0.7,
+        temperature: 0.9,
         max_tokens: 1500,
         stream: true,
         n: 1,
@@ -141,7 +141,7 @@ export async function POST(request) {
     const payLoad = {
         model: 'gpt-3.5-turbo-16k',
         messages: [{ role: 'system', content: 'You are a copywriter with 10 years of experience.' }, { role: "system", content: "Output only valid JSON, format: {'posts': [{'headline': 'the headline', 'content': 'the content'}]}" }, { role: 'user', content: firstPrompt }],
-        temperature: 0.8,
+        temperature: 0.9,
         max_tokens: 10000,
         stream: true,
         n: 1,
