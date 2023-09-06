@@ -110,6 +110,27 @@ export async function POST(request) {
         - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
         `
     }
+    if (contentAngle === "space information"){
+        firstPrompt = `
+        ${formulas}
+        ${intro}
+        Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+        """
+        - Based on the above product information and folowing context: """${mainMessage}""", generate exactly ${numberOfDrafts} professional and insightful Facebook post.
+        - The post should have the ${toneOfVoice} tone and each post must be approximately ${numberOfWords} words in length.
+        - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
+        `
+    }
+    if (contentAngle === "reviews and testimonials"){
+        firstPrompt = `
+        ${formulas}
+        Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
+        """
+        - Based on the folowing reviews and testimonials: """${mainMessage}""", generate exactly ${numberOfDrafts} professional, emotional, and influencing Facebook post.
+        - The post should have the ${toneOfVoice} tone and each post must be approximately ${numberOfWords} words in length.
+        - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
+        `
+    }
     else {
         if (mainMessage === "") {
             prompt = `$
