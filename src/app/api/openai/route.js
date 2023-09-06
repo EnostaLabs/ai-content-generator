@@ -110,10 +110,9 @@ export async function POST(request) {
         - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
         `
     }
-    if (contentAngle === "space information"){
+    if (contentAngle === "space information") {
         firstPrompt = `
         ${formulas}
-        ${intro}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
         """
         - Based on the above product information and folowing context: """${mainMessage}""", generate exactly ${numberOfDrafts} professional and insightful Facebook post.
@@ -121,7 +120,7 @@ export async function POST(request) {
         - You must consider and pick some formulas from the aforementioned formulas that fit best for motivational post.
         `
     }
-    if (contentAngle === "reviews and testimonials"){
+    if (contentAngle === "reviews and testimonials") {
         firstPrompt = `
         ${formulas}
         Follow these instructions carefully and craft high-quality and original compelling Facebook marketing posts for Enouvo Space:
@@ -159,13 +158,27 @@ export async function POST(request) {
     let finalPrompt = `${firstPrompt}`
     console.log(finalPrompt)
 
-    const payLoad = {
-        model: 'gpt-3.5-turbo-16k',
-        messages: [{ role: 'system', content: 'You are a copywriter with 10 years of experience.' }, { role: "system", content: "Output only valid JSON, format: {'posts': [{'headline': 'the headline', 'content': 'the content'}]}" }, { role: 'user', content: firstPrompt }],
-        temperature: 0.9,
-        max_tokens: 10000,
-        stream: true,
-        n: 1,
+    let payLoad;
+
+    if (contentAngle === "space information") {
+        payLoad = {
+            model: 'gpt-3.5-turbo-16k',
+            messages: [{ role: 'system', content: `You are a copywriter with 10 years of experience. ${intro}` }, { role: "system", content: "Output only valid JSON, format: {'posts': [{'headline': 'the headline', 'content': 'the content'}]}" }, { role: 'user', content: firstPrompt }],
+            temperature: 0.9,
+            max_tokens: 10000,
+            stream: true,
+            n: 1,
+        }
+    }
+    else {
+        payLoad = {
+            model: 'gpt-3.5-turbo-16k',
+            messages: [{ role: 'system', content: 'You are a copywriter with 10 years of experience.' }, { role: "system", content: "Output only valid JSON, format: {'posts': [{'headline': 'the headline', 'content': 'the content'}]}" }, { role: 'user', content: firstPrompt }],
+            temperature: 0.9,
+            max_tokens: 10000,
+            stream: true,
+            n: 1,
+        }
     }
 
     const stream = await OpenAIStream(payLoad)
